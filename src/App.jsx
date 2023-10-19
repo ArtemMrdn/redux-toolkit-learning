@@ -1,5 +1,8 @@
 import { useState } from "react";
 import "./App.css";
+import { v1 } from "uuid";
+import { TodoList } from "./components/TodoList";
+import { InputField } from "./components/InputField";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -10,7 +13,7 @@ function App() {
       setTodos([
         ...todos,
         {
-          id: new Date().toISOString,
+          id: v1(),
           text,
           completed: false,
         },
@@ -19,22 +22,31 @@ function App() {
     }
   };
 
+  const removeTodo = (todoId) => {
+    setTodos(todos.filter((todo) => todo.id !== todoId));
+  };
+
+  const toggleTodoComplete = (todoId) => {
+    setTodos(
+      todos.map((todo) => {
+        if (todo.id !== todoId) return todo;
+        return {
+          ...todo,
+          completed: !todo.completed,
+        };
+      })
+    );
+  };
+
   return (
     <div className='App'>
-      <label>
-        <input value={text} onChange={(e) => setText(e.target.value)} />
-        <button onClick={addTodo}>Add Todo</button>
-      </label>
+      <InputField text={text} handleInput={setText} handleSubmit={addTodo} />
 
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>
-            <input type='checkbox' />
-            <span>{todo.text}</span>
-            <span style={{ color: "red" }}>&times;</span>
-          </li>
-        ))}
-      </ul>
+      <TodoList
+        todos={todos}
+        toggleTodoComplete={toggleTodoComplete}
+        removeTodo={removeTodo}
+      />
     </div>
   );
 }
