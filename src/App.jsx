@@ -1,31 +1,31 @@
-import { useState, useEffect } from "react";
-import "./App.css";
-import { useDispatch, useSelector } from "react-redux";
-import { TodoList } from "./components/TodoList";
-import { InputField } from "./components/InputField";
-import { addNewTodo, fetchTodos } from "./store/todoSlice";
+import {useState} from 'react';
+import { useDispatch } from 'react-redux';
+
+import { addTodo } from './store/todoSlice';
+import NewTodoForm from './components/NewTodoForm';
+import TodoList from './components/TodoList';
+
+import './App.css';
+
 
 function App() {
-  const [text, setText] = useState("");
-  const { status, error } = useSelector((state) => state.todos);
+  const [text, setText] = useState('');
   const dispatch = useDispatch();
 
-  const addTask = () => {
-    dispatch(addNewTodo(text));
-    setText("");
-  };
-
-  useEffect(() => {
-    dispatch(fetchTodos());
-  }, [dispatch]);
+  const handleAction = () => {
+    if(text.trim().length) {
+      dispatch(addTodo({text}));
+      setText('');
+    }
+  }
 
   return (
     <div className='App'>
-      <InputField text={text} handleInput={setText} handleSubmit={addTask} />
-
-      {status === "loading" && <h2>Loading...</h2>}
-      {error && <h2>An error occured : {error}</h2>}
-
+      <NewTodoForm
+        value={text}
+        updateText={setText}
+        handleAction={handleAction}
+      />
       <TodoList />
     </div>
   );

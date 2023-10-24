@@ -13,11 +13,11 @@ li {
   gap: 0.5rem;
 }
 
-.delete {
-  color: red;
-  cursor: pointer;
-}
-
 input:checked + span {
   text-decoration: line-through;
+}
+
+span:last-child {
+  color: red;
+  cursor: pointer;
 }
